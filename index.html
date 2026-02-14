@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Landing</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .hero {
+      position: relative;
+      border: 2px solid var(--line);
+      overflow: hidden;
+      min-height: min(100vh, 920px);
+      display: grid;
+      align-items: stretch;
+      background: transparent;
+    }
+    .hero::before {
+      content:"";
+      position:absolute;
+      inset:-3px;
+      background: url("/images/rhizome.svg") center/cover no-repeat;
+      opacity: .28;
+      mix-blend-mode: multiply;
+      pointer-events:none;
+      transform: rotate(-2deg) scale(1.03);
+    }
+    .heroInner {
+      position:relative;
+      z-index:1;
+      display:grid;
+      grid-template-columns: 1fr;
+      gap: var(--gap);
+      padding: 16px;
+      align-items: center;
+      justify-items: center;
+    }
+    .statement {
+      border: 2px solid var(--line);
+      background: rgba(247,246,241,.88);
+      padding: 14px;
+      display:flex;
+      flex-direction:column;
+      justify-content:space-between;
+      gap: 12px;
+      max-width: 72ch;
+    }
+    .statement h2 {
+      margin:0;
+      font-size:12px;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+    .statement p {
+      margin:0;
+      color: var(--muted);
+      line-height:1.7;
+      font-size: 14.5px;
+    }
+    .choices {
+      display:flex;
+      gap: 16px;
+      flex-wrap:wrap;
+      align-items:center;
+      padding-top: 4px;
+    }
+    .choice {
+      text-decoration:none;
+      text-transform: uppercase;
+      letter-spacing:.02em;
+      font-size: 13.5px;
+      position:relative;
+      padding-bottom:2px;
+      color: var(--accent);
+    }
+    .choice::after {
+      content:"";
+      position:absolute;
+      left:0; right:0; bottom:-4px;
+      height:2px;
+      background: var(--accent);
+      transform: scaleX(.55);
+      transform-origin:left;
+      transition: transform .16s ease;
+    }
+    .choice:hover::after { transform: scaleX(1); }
+    .note {
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+<body class="landing">
+  <div id="landingBg" class="landingBg" aria-hidden="true"></div>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>Thijs van de Loo</h1>
+        <p>Ritueel, spel en publieke ruimte — tijdelijke structuren waarin mensen hun innerlijke speler activeren.</p>
+      </div>
+      <nav>
+        <a class="link accent" href="portfolio.html">Portfolio</a>
+        <a class="link" href="ongoing.html">Doorlopende projecten</a>
+        <a class="link" href="about.html">About</a>
+      </nav>
+    </header>
+
+    <section class="hero" aria-label="Landing">
+      <div class="heroInner">
+        <div class="statement">
+          <div>
+            <h2>Artist statement</h2>
+            <p>
+              Ik werk met spel, ritueel en publieke ruimte. Mijn praktijk bouwt tijdelijke
+              structuren waarin mensen hun innerlijke speler activeren — geen regels, wel
+              richtingen. De rhizoom is hier geen illustratie maar een methode: verbindingen
+              groeien zijdelings, zonder centrum, via ontmoetingen, omwegen en herhaling.
+            </p>
+          </div>
+
+          <div>
+            <div class="choices">
+              <a class="choice" href="portfolio.html">A — Naar portfolio</a>
+              <a class="choice" href="ongoing.html">B — Naar doorlopende projecten</a>
+              <a class="choice" href="about.html">C — How I work</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+
+    <section class="homeGridSection">
+      <div class="homeGridHeader">
+        <div>
+          <h2>Werk in beeld</h2>
+          <p>
+            Een compacte grid als ingang: portfolio-fragmenten en doorlopende onderzoeken naast elkaar.
+            Klik door voor context, kruislinks en tags.
+          </p>
+        </div>
+        <div class="cta">
+          <a class="link" href="portfolio.html">Portfolio</a>
+          <a class="link" href="ongoing.html">Doorlopende projecten</a>
+        </div>
+      </div>
+
+      <div id="homeGrid" class="homeGrid" aria-live="polite"></div>
+    </section>
+
+
+    <div class="card">
+      <h3>Rhizoom-notitie</h3>
+      <p>
+        Projecten zijn wortelstokken: ze lopen door, splitsen, kruisen, verdwijnen en duiken elders weer op.
+        Op de portfolio-pagina kun je tags gebruiken om die verbindingen zichtbaar te maken.
+      </p>
+    </div>
+
+    <div class="footer">
+      <div>© <span id="y"></span> Thijs van de Loo</div>
+      <div><a href="about.html">Contact</a> · <a href="portfolio.html">Portfolio</a> · <a href="ongoing.html">Ongoing</a></div>
+    </div>
+  </div>
+
+  <script src="data/projects.js"></script>
+  <script src="data/ongoing.js"></script>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+
+    // Landing background: pick a different photo on each visit
+    (function setRandomLandingBg(){
+      const bg = document.getElementById('landingBg');
+      if(!bg) return;
+      const imgs = [
+         '/images/landing-01.jpg',
+         '/images/landing-02.jpg',
+         '/images/landing-03.jpg',
+         '/images/landing-04.jpg'
+      ];
+      const i = Math.floor(Math.random() * imgs.length);
+      bg.style.backgroundImage = `url('${imgs[i]}')`;
+    })();
+
+    const elGrid = document.getElementById('homeGrid');
+    const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS : [];
+    const ongoing = Array.isArray(window.ONGOING) ? window.ONGOING : [];
+
+    // Curated picks: tweak these ids to feature different work
+    const pickProjects = [1,2,3,4,5,6];
+    const pickOngoing = ['o1','o2','o3'];
+
+    const cards = [];
+    pickProjects.forEach(id => {
+      const p = projects.find(x => x.id === id);
+      if(!p) return;
+      cards.push({
+        kind:'portfolio',
+        title:p.title,
+        year:p.year,
+        excerpt:p.excerpt,
+        image:p.image,
+        tags:(p.tags||[]).slice(0,3),
+        href:`project.html?id=${encodeURIComponent(p.id)}`
+      });
+    });
+    pickOngoing.forEach(id => {
+      const o = ongoing.find(x => x.id === id);
+      if(!o) return;
+      cards.push({
+        kind:'ongoing',
+        title:o.title,
+        year:o.year,
+        excerpt:o.excerpt,
+        image:o.image,
+        tags:(o.tags||[]).slice(0,3),
+        href:`ongoing-project.html?id=${encodeURIComponent(o.id)}`
+      });
+    });
+
+    // Fallback if picks are empty
+    if(cards.length === 0){
+      projects.slice(0,6).forEach(p => cards.push({kind:'portfolio', title:p.title, year:p.year, excerpt:p.excerpt, image:p.image, tags:(p.tags||[]).slice(0,3), href:`project.html?id=${encodeURIComponent(p.id)}`}));
+      ongoing.slice(0,3).forEach(o => cards.push({kind:'ongoing', title:o.title, year:o.year, excerpt:o.excerpt, image:o.image, tags:(o.tags||[]).slice(0,3), href:`ongoing-project.html?id=${encodeURIComponent(o.id)}`}));
+    }
+
+    const badge = k => k === 'ongoing' ? 'Ongoing' : 'Portfolio';
+    const escapeHtml = (s='') => String(s)
+      .replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;')
+      .replaceAll('"','&quot;').replaceAll("'",'&#39;');
+
+    elGrid.innerHTML = cards.map((c, i) => {
+      const wide = (i === 0 || i === 3) ? ' hgCard--wide' : '';
+      return `
+        <a class="hgCard${wide}" href="${c.href}">
+          <div class="hgMedia">
+            <span class="hgBadge">${badge(c.kind)}</span>
+            <img src="${escapeHtml(c.image)}" alt="${escapeHtml(c.title)}" loading="lazy" />
+          </div>
+          <div class="hgBody">
+            <div class="hgTitleRow">
+              <h3 class="hgTitle">${escapeHtml(c.title)}</h3>
+              <span class="hgYear">${escapeHtml(c.year||'')}</span>
+            </div>
+            <p class="hgExcerpt">${escapeHtml(c.excerpt||'')}</p>
+            <div class="hgMetaRow">${(c.tags||[]).map(t => `<span class="hgTag">${escapeHtml(t)}</span>`).join('')}</div>
+          </div>
+        </a>`;
+    }).join('');
+
+  </script>
+</body>
+</html>

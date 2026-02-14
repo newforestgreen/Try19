@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .grid{
+      display:grid;
+      grid-template-columns: 1.15fr .85fr;
+      gap: var(--gap);
+      align-items:start;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
+
+    .featured{
+      position:relative;
+      z-index:1;
+      padding:14px;
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      grid-template-rows: 240px 240px;
+      gap:14px;
+      background:
+        linear-gradient(to right, rgba(17,17,17,.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(17,17,17,.04) 1px, transparent 1px);
+      background-size: 22px 22px;
+    }
+    @media (max-width: 980px){ .featured{grid-template-columns:1fr; grid-template-rows:auto;} .tile{height:240px;} }
+
+    .tile{
+      position:relative;
+      border:2px dashed var(--line);
+      overflow:hidden;
+      cursor:pointer;
+      text-decoration:none;
+      display:block;
+      background: rgba(247,246,241,.92);
+    }
+    .tile img{width:100%; height:100%; object-fit:cover; display:block;}
+    .tile::after{
+      content:"";
+      position:absolute;
+      inset:0;
+      background: linear-gradient(180deg, rgba(247,246,241,0) 55%, rgba(247,246,241,.84));
+      pointer-events:none;
+    }
+    .tileLabel{
+      position:absolute;
+      left:12px; right:12px; bottom:10px;
+      display:flex; justify-content:space-between; gap:12px;
+      align-items:flex-end;
+      z-index:2;
+    }
+    .tileLabel b{
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+      line-height:1.2;
+    }
+    .tileLabel span{color:var(--muted); font-size:13px; white-space:nowrap;}
+
+    .cut-a{clip-path: polygon(0% 6%, 72% 0%, 100% 18%, 94% 100%, 16% 100%, 0% 84%);}
+    .cut-b{clip-path: polygon(8% 0%, 100% 8%, 100% 88%, 78% 100%, 0% 92%, 0% 18%);}
+    .cut-c{clip-path: polygon(0% 10%, 22% 0%, 100% 10%, 92% 100%, 0% 92%);}
+    .cut-d{clip-path: polygon(0% 0%, 88% 0%, 100% 24%, 92% 100%, 10% 100%, 0% 76%);}
+
+    .items{padding:14px; display:grid; gap:10px; position:relative; z-index:1;}
+    .item{
+      display:grid;
+      grid-template-columns: 84px 1fr;
+      gap:12px;
+      align-items:center;
+      padding:10px;
+      border:2px solid var(--line);
+      text-decoration:none;
+      background: rgba(247,246,241,.92);
+      transition: transform .12s ease;
+    }
+    .item:hover{transform: translateY(-1px);}
+    .thumb{width:84px; height:58px; border:2px solid var(--line); overflow:hidden;}
+    .thumb img{width:100%; height:100%; object-fit:cover; display:block;}
+    .meta b{font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase; line-height:1.2;}
+    .meta div{margin-top:4px; color:var(--muted); font-size:13.5px; line-height:1.45;}
+
+    .filters{
+      position:relative;
+      z-index:1;
+      padding:14px;
+      border-bottom:2px solid var(--line);
+      background: rgba(247,246,241,.92);
+      display:grid;
+      gap:12px;
+    }
+    .filtersRow{display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;}
+    .count{color:var(--muted); font-size:13.5px;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>Portfolio</h1>
+        <p>
+          Het portfolio als index van fragmenten. Gebruik tags en zoek om rhizomatische verbindingen te lezen.
+        </p>
+      </div>
+      <nav>
+        <a class="link" href="index.html">Landing</a>
+        <a class="link" href="ongoing.html">Doorlopende projecten</a>
+        <a class="link" href="about.html">About</a>
+        <a class="link accent" href="portfolio.html">Portfolio</a>
+      </nav>
+    </header>
+
+    <section class="grid">
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="kicker">Featured fragments</p>
+            <p class="sub">Vier sneden uit het archief. Filter links; de index rechts volgt mee.</p>
+          </div>
+          <div class="pill" id="pillLeft">Rhizoom <small id="pillLeftSmall">—</small></div>
+        </div>
+
+        <div class="filters" aria-label="Filters">
+          <div class="filtersRow">
+            <div class="controls">
+              <input class="input" id="q" type="search" placeholder="Zoek op titel / excerpt…" autocomplete="off" />
+              <button class="btn" id="clear" type="button">Reset</button>
+            </div>
+            <div class="count" id="count">—</div>
+          </div>
+          <div class="tags" id="tags" aria-label="Tags"></div>
+        </div>
+
+        <div class="featured" id="featured"></div>
+      </div>
+
+      <aside class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="kicker">Project index</p>
+            <p class="sub">Klik een project: <code>project.html?id=…</code></p>
+          </div>
+          <div class="pill" id="pillRight">Portfolio <small id="pillRightSmall">—</small></div>
+        </div>
+        <div class="items" id="items"></div>
+      </aside>
+    </section>
+
+    <div class="card">
+      <h3>Gebruik</h3>
+      <p>
+        Tip: houd je tags klein (5–10 kernwoorden) en wees consequent. Dat maakt je praktijk leesbaar zonder uitleg.
+      </p>
+    </div>
+
+    <div class="footer">
+      <div>© <span id="y"></span> Thijs van de Loo</div>
+      <div><a href="about.html">Contact</a> · <a href="index.html">Home</a></div>
+    </div>
+  </div>
+
+  <script src="data/projects.js"></script>
+  <script>
+    const projects = Array.isArray(window.PROJECTS) ? window.PROJECTS : [];
+    const featuredIds = [1,2,9,10];
+    const cuts = ["cut-a","cut-b","cut-c","cut-d"];
+
+    const elFeatured = document.getElementById("featured");
+    const elItems = document.getElementById("items");
+    const elTags = document.getElementById("tags");
+    const elQ = document.getElementById("q");
+    const elCount = document.getElementById("count");
+
+    const pillLeftSmall = document.getElementById("pillLeftSmall");
+    const pillRightSmall = document.getElementById("pillRightSmall");
+
+    const selected = new Set();
+
+    // Build tag index
+    const tagCounts = new Map();
+    projects.forEach(p => (p.tags || []).forEach(t => tagCounts.set(t, (tagCounts.get(t) || 0) + 1)));
+    const tagList = Array.from(tagCounts.entries())
+      .sort((a,b) => b[1]-a[1] || a[0].localeCompare(b[0], 'nl'))
+      .map(([t,count]) => ({t,count}));
+
+    renderTags();
+    render();
+
+    elQ.addEventListener('input', render);
+    document.getElementById('clear').addEventListener('click', () => {
+      selected.clear();
+      elQ.value = '';
+      renderTags();
+      render();
+      elQ.focus();
+    });
+
+    function renderTags(){
+      elTags.innerHTML = '';
+      tagList.forEach(({t,count}) => {
+        const b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'tag';
+        b.setAttribute('aria-pressed', selected.has(t) ? 'true' : 'false');
+        b.innerHTML = `${escapeHtml(t)} <small class="mono">${count}</small>`;
+        b.addEventListener('click', () => {
+          if(selected.has(t)) selected.delete(t); else selected.add(t);
+          renderTags();
+          render();
+        });
+        elTags.appendChild(b);
+      });
+    }
+
+    function applyFilters(){
+      const q = elQ.value.trim().toLowerCase();
+      const tags = Array.from(selected);
+      return projects.filter(p => {
+        if(q){
+          const hay = `${p.title||''} ${p.excerpt||''} ${(p.tags||[]).join(' ')}`.toLowerCase();
+          if(!hay.includes(q)) return false;
+        }
+        if(tags.length){
+          const set = new Set(p.tags || []);
+          for(const t of tags) if(!set.has(t)) return false;
+        }
+        return true;
+      });
+    }
+
+    function render(){
+      const filtered = applyFilters();
+
+      pillLeftSmall.textContent = `${filtered.length} knopen`;
+      pillRightSmall.textContent = String(filtered.length);
+      elCount.textContent = `${filtered.length} / ${projects.length} projecten`;
+
+      // Featured: try fixed ids, but fall back to first 4 filtered
+      const picks = featuredIds
+        .map(id => filtered.find(p => p.id === id))
+        .filter(Boolean);
+      const featured = (picks.length ? picks : filtered.slice(0,4)).slice(0,4);
+
+      elFeatured.innerHTML = '';
+      featured.forEach((p, idx) => {
+        const a = document.createElement('a');
+        a.className = `tile ${cuts[idx % cuts.length]}`;
+        a.href = `project.html?id=${encodeURIComponent(p.id)}`;
+        a.innerHTML = `
+          <img src="${p.image}" alt="${escapeHtml(p.title)}">
+          <div class="tileLabel"><b>${escapeHtml(p.title)}</b><span>${escapeHtml(p.year)}</span></div>
+        `;
+        elFeatured.appendChild(a);
+      });
+
+      elItems.innerHTML = '';
+      filtered.forEach((p) => {
+        const a = document.createElement('a');
+        a.className = "item";
+        a.href = `project.html?id=${encodeURIComponent(p.id)}`;
+        a.innerHTML = `
+          <div class="thumb"><img src="${p.image}" alt="${escapeHtml(p.title)}"></div>
+          <div class="meta">
+            <b>${escapeHtml(p.title)}</b>
+            <div>${escapeHtml(p.year)} • ${escapeHtml(p.excerpt)}</div>
+          </div>
+        `;
+        elItems.appendChild(a);
+      });
+    }
+
+    function escapeHtml(str){
+      return String(str ?? "").replace(/[&<>"']/g, s => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[s]));
+    }
+
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>

@@ -1,0 +1,161 @@
+<!doctype html>
+<html lang="nl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>About</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .grid{
+      display:grid;
+      grid-template-columns: 1.05fr .95fr;
+      gap: var(--gap);
+      align-items:start;
+    }
+    @media (max-width: 980px){ .grid{grid-template-columns:1fr;} }
+
+    .aboutHero{
+      border:2px solid var(--line);
+      padding:14px;
+      background:
+        linear-gradient(to right, rgba(17,17,17,.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(17,17,17,.04) 1px, transparent 1px);
+      background-size: 22px 22px;
+      position:relative;
+      overflow:hidden;
+    }
+    .aboutHero::before{
+      content:"";
+      position:absolute;
+      inset:-2px;
+      background: url("images/rhizome.svg") center/cover no-repeat;
+      opacity:.14;
+      pointer-events:none;
+    }
+    .aboutHeroInner{position:relative; z-index:1; display:grid; gap:12px;}
+    .aboutHero h2{margin:0; font-size:12px; letter-spacing:.08em; text-transform:uppercase;}
+    .aboutHero p{margin:0; color:var(--muted); font-size:14.5px; line-height:1.7; max-width:78ch;}
+
+    .list{
+      margin:0;
+      padding-left: 18px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 14.5px;
+    }
+    .list li{margin: 6px 0;}
+
+    .contact{
+      display:grid;
+      gap:10px;
+    }
+    .contact a{
+      border:2px solid var(--line);
+      padding:10px;
+      text-decoration:none;
+      background: rgba(247,246,241,.92);
+      display:flex;
+      justify-content:space-between;
+      gap:12px;
+      align-items:baseline;
+    }
+    .contact a b{font-size:12px; font-weight:800; letter-spacing:.06em; text-transform:uppercase;}
+    .contact a span{color:var(--muted); font-size:13px; white-space:nowrap;}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>About</h1>
+        <p>Wie ik ben, hoe ik werk, en hoe je me kunt inschakelen.</p>
+      </div>
+      <nav>
+        <a class="link" href="index.html">Landing</a>
+        <a class="link" href="portfolio.html">Portfolio</a>
+        <a class="link" href="ongoing.html">Doorlopende projecten</a>
+        <a class="link accent" href="about.html">About</a>
+      </nav>
+    </header>
+
+    <section class="grid">
+      <div class="aboutHero">
+        <div class="aboutHeroInner">
+          <h2>Missie</h2>
+          <p>
+            Ik ontwerp en faciliteer ervaringen op het snijvlak van theater, spel en ritueel.
+            Mijn werk activeert publieke ruimte: het maakt plek voor ontmoeting, onderhandeling,
+            aandacht en verbeelding — zonder autoritaire vorm.
+          </p>
+          <p>
+            De kernvraag: <span class="mono">hoe organiseer je collectieve aandacht?</span>
+            Soms via een installatie, soms via een workshop, soms via muziek of een tijdelijke infrastructuur.
+          </p>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panelHead">
+          <div>
+            <p class="kicker">How I work</p>
+            <p class="sub">Een helder proces (zodat samenwerking licht blijft).</p>
+          </div>
+          <div class="pill">Proces <small>4 stappen</small></div>
+        </div>
+        <div style="position:relative; z-index:1; padding:14px; display:grid; gap:14px; background: rgba(247,246,241,.92);">
+          <div class="card">
+            <h3>1 — Intake</h3>
+            <p>Wat is de plek, het publiek, de aanleiding, en welke spanning wil je zichtbaar maken?</p>
+          </div>
+          <div class="card">
+            <h3>2 — Ontwerp</h3>
+            <p>Ik vertaal dat naar een score: ruimte, handelingen, tijd, materialen, uitnodiging.</p>
+          </div>
+          <div class="card">
+            <h3>3 — Test / Iteratie</h3>
+            <p>We testen klein, scherpen aan, en bouwen de juiste ‘drempels’ voor deelname.</p>
+          </div>
+          <div class="card">
+            <h3>4 — Uitvoering</h3>
+            <p>Ik faciliteer (of regisseer op afstand) en lever een overdraagbaar format op.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="grid">
+      <div class="card">
+        <h3>Waarvoor kun je me bellen?</h3>
+        <ul class="list">
+          <li>Publieke interventies en participatieve installaties</li>
+          <li>Ritueel ontwerp (seculier / pluriform) voor organisaties en communities</li>
+          <li>Workshops rond spel, aandacht en betekenisgeving</li>
+          <li>Infrastructuur voor samenzijn (dome / zitmodules / tijdelijke settings)</li>
+          <li>Muzikale/performatieve samenwerkingen (Swampcollective, etc.)</li>
+        </ul>
+      </div>
+
+      <div class="card">
+        <h3>Contact</h3>
+        <p>
+          Vul hier je echte gegevens in (mail, socials). Houd het simpel: één mailadres en eventueel één link.
+        </p>
+        <div class="contact">
+          <a href="mailto:hello@example.com"><b>Email</b><span class="mono">hello@example.com</span></a>
+          <a href="#"><b>Instagram</b><span class="mono">@jouwaccount</span></a>
+          <a href="#"><b>Newsletter</b><span class="mono">(optioneel)</span></a>
+        </div>
+      </div>
+    </section>
+
+    <div class="footer">
+      <div>© <span id="y"></span> Thijs van de Loo</div>
+      <div><a href="portfolio.html">Bekijk werk</a></div>
+    </div>
+  </div>
+
+  <script>
+    document.getElementById('y').textContent = new Date().getFullYear();
+  </script>
+</body>
+</html>
